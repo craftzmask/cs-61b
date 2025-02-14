@@ -107,18 +107,56 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed;
-        changed = false;
+        boolean changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        // Store the status of the board before tilt
+        String oldBoardStatus = board.toString();
+        System.out.println(oldBoardStatus);
+
+        board.setViewingPerspective(side);
+
+        for (int col = 0; col < board.size(); col++) {
+            tiltColumnUp(col);
+        }
+
+        board.setViewingPerspective(Side.NORTH);
+
+        // Store the status of the board after tilt
+        String newBoardStatus = board.toString();
+        System.out.println(newBoardStatus);
+
+        // If old status != new status then it was changed
+        changed = !oldBoardStatus.equals(newBoardStatus);
 
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    private void tiltColumnUp(int col) {
+        int maxRowToReach = board.size() - 1;
+        for (int row = maxRowToReach - 1; row >= 0; row--) {
+            Tile above = board.tile(col, maxRowToReach);
+            Tile current = board.tile(col, row);
+
+            // Only check the non-empty tile
+            if (current == null) {
+                continue;
+            }
+
+            if (above == null) {                           // if above tile is empty then just move up
+                board.move(col, maxRowToReach, current);
+            } else if (above.value() == current.value()) { // merge it current same as above
+                board.move(col, maxRowToReach, current);
+                score += current.value() * 2;
+                maxRowToReach--;
+            } else {                                       // move below above if different value
+                board.move(col, maxRowToReach - 1, current);
+                maxRowToReach--;
+            }
+        }
     }
 
     /** Checks if the game is over and sets the gameOver variable

@@ -1,7 +1,10 @@
 package IntList;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class SquarePrimesTest {
 
@@ -15,6 +18,39 @@ public class SquarePrimesTest {
         IntList lst = IntList.of(14, 15, 16, 17, 18);
         boolean changed = IntListExercises.squarePrimes(lst);
         assertEquals("14 -> 15 -> 16 -> 289 -> 18", lst.toString());
+        assertTrue(changed);
+    }
+
+    @Test
+    public void testSquarePrimesOneNonPrime() {
+        IntList lst = IntList.of(14);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("14", lst.toString());
+        assertFalse(changed);
+    }
+
+
+    @Test
+    public void testSquarePrimesOnePrime() {
+        IntList lst = IntList.of(11);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("121", lst.toString());
+        assertTrue(changed);
+    }
+
+    @Test
+    public void testSquarePrimesOnlyPrimes() {
+        IntList lst = IntList.of(11, 17);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("121 -> 289", lst.toString());
+        assertTrue(changed);
+    }
+
+    @Test
+    public void testSquarePrimesMixed() {
+        IntList lst = IntList.of(7, 11, 14, 15, 16, 17, 18);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("49 -> 121 -> 14 -> 15 -> 16 -> 289 -> 18", lst.toString());
         assertTrue(changed);
     }
 }

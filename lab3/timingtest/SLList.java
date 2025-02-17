@@ -15,20 +15,17 @@ public class SLList<Item> {
 
 	/* The first item (if it exists) is at sentinel.next. */
 	private IntNode sentinel;
-	private IntNode last;
 	private int size;
 
 	/** Creates an empty timingtest.SLList. */
 	public SLList() {
 		sentinel = new IntNode(null, null);
-		last = new IntNode(null, null);
 		size = 0;
 	}
 
 	public SLList(Item x) {
 		sentinel = new IntNode(null, null);
 		sentinel.next = new IntNode(x, null);
-		last = sentinel.next;
 		size = 1;
 	}
 
@@ -45,9 +42,16 @@ public class SLList<Item> {
 
 	/** Adds x to the end of the list. */
 	public void addLast(Item x) {
-		last.next = new IntNode(x, null);
-		last = last.next;
 		size = size + 1;
+
+		IntNode p = sentinel;
+
+		/* Advance p to the end of the list. */
+		while (p.next != null) {
+			p = p.next;
+		}
+
+		p.next = new IntNode(x, null);
 	}
 
 	/** returns last item in the list */

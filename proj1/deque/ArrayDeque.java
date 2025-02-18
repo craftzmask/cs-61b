@@ -81,6 +81,10 @@ public class ArrayDeque<T> {
             return null;
         }
 
+        if (items.length >= 16 && size() * 4 <= items.length) {
+            resize(items.length / 4);
+        }
+
         if (nextFirst + 1 >= items.length) {
             nextFirst = -1;
         }
@@ -96,6 +100,10 @@ public class ArrayDeque<T> {
     public T removeLast() {
         if (isEmpty()) {
             return null;
+        }
+
+        if (items.length >= 16 && size() * 4 <= items.length) {
+            resize(items.length / 4);
         }
 
         if (nextLast - 1 < 0) {

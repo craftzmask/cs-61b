@@ -90,7 +90,6 @@ public class LinkedListDequeTest {
     /* check if null is return when removing from an empty LinkedListDeque. */
     public void emptyNullReturnTest() {
 
-        System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 
         assertNull("Should return null when removeFirst is called on an empty Deque,", lld1.removeFirst());

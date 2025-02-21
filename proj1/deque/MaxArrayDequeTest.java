@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import java.util.Comparator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class MaxArrayDequeTest {
 
@@ -36,5 +35,29 @@ public class MaxArrayDequeTest {
 
         MaxArrayDeque<Integer> max = new MaxArrayDeque<>(c);
         assertNull(max.max());
+    }
+
+    @Test
+    public void testEquals() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        for (int i = 0; i < 10; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+        }
+
+        assertTrue(lld1.equals(lld2));
+    }
+
+    @Test
+    public void testEqualsDeque() {
+        Deque<Integer> lld1 = new ArrayDeque<>();
+        Deque<Integer> lld2 = new LinkedListDeque<>();
+        for (int i = 0; i < 10; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+        }
+
+        assertTrue(lld1.equals(lld2));
     }
 }

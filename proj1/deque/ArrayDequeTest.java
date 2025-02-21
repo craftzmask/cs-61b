@@ -111,4 +111,18 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
+
+    @Test
+    public void testIterable() {
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        for (int i = 0; i < 10; i++) {
+            a.addLast(i);
+        }
+
+        int value = 0;
+        for (int i : a) {
+            assertEquals(value, i);
+            value++;
+        }
+    }
 }

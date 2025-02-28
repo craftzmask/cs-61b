@@ -1,7 +1,12 @@
 package bstmap;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 /** Tests by Brendan Hu, Spring 2015, revised for 2016 by Josh Hug */
 public class TestBSTMap {
@@ -87,4 +92,24 @@ public class TestBSTMap {
         assertTrue(b.containsKey("hi"));
     }
 
+    @Test
+    public void keySetTest() {
+        BSTMap<String, Integer> b = new BSTMap<String, Integer>();
+        b.put("hello", null);
+        b.put("hello", null);
+        b.put("world", null);
+        b.put("123123", null);
+
+        Set<String> k = b.keySet();
+        assertEquals(3, k.size());
+
+        List<String> s = new ArrayList<>();
+        s.add("hello");
+        s.add("world");
+        s.add("123123");
+        
+        for (String a : k) {
+            assertTrue(s.contains(a));
+        }
+    }
 }

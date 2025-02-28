@@ -1,5 +1,6 @@
 package bstmap;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -102,7 +103,18 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     /* Returns a Set view of the keys contained in this map. Not required for Lab 7.
      * If you don't implement this, throw an UnsupportedOperationException. */
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        Set<K> keys = new HashSet<>();
+        addKeySet(keys, root);
+        return keys;
+    }
+
+    private void addKeySet(Set<K> keys, BSTNode node) {
+        if (node == null) {
+            return;
+        }
+        keys.add(node.key);
+        addKeySet(keys, node.left);
+        addKeySet(keys, node.right);
     }
 
     /* Removes the mapping for the specified key from this map if present.

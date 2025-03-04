@@ -129,4 +129,14 @@ public class TestBSTMapExtra {
         assertEquals(2, q.size());
     }
 
+    @Test
+    public void testPrint() {
+        BSTMap<String,String> q = new BSTMap<>();
+        q.put("e", "a");
+        q.put("c","a");
+        q.put("b","a");
+        q.put("a","a");
+        q.printInOrder(); // should print a b c e
+    }
+
 }

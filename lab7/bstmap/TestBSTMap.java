@@ -107,7 +107,7 @@ public class TestBSTMap {
         s.add("hello");
         s.add("world");
         s.add("123123");
-        
+
         for (String a : k) {
             assertTrue(s.contains(a));
         }

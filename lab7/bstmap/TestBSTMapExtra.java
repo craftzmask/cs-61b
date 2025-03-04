@@ -115,4 +115,18 @@ public class TestBSTMapExtra {
         assertEquals(null, noChild.get('Z'));
     }
 
+    @Test
+    public void testRemoveKeyAndValue() {
+        BSTMap<String,String> q = new BSTMap<>();
+        q.put("c","a");
+        q.put("b","a");
+        q.put("a","a");
+
+        q.remove("c", "b");
+        assertEquals(3, q.size());
+
+        q.remove("c", "a");
+        assertEquals(2, q.size());
+    }
+
 }

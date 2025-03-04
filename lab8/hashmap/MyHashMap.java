@@ -9,7 +9,7 @@ import java.util.*;
  *  Assumes null keys will never be inserted, and does not resize down upon remove().
  *  @author Khanh Chung
  */
-public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
+public class MyHashMap<K, V> implements Map61B<K, V> {
 
     public Iterator<K> iterator() {
         return null;

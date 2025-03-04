@@ -96,6 +96,8 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             node.left = put(node.left, key, value);
         } else if (cmp > 0) {
             node.right = put(node.right, key, value);
+        } else {
+            node.value = value;
         }
         return node;
     }
@@ -121,7 +123,46 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      * Not required for Lab 7. If you don't implement this, throw an
      * UnsupportedOperationException. */
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V value = get(key);
+        if (value != null) {
+            root = remove(root, key);
+        }
+        return value;
+    }
+
+    private BSTNode remove(BSTNode root, K key) {
+        if (root == null) {
+            return null;
+        }
+
+        int cmp = key.compareTo(root.key);
+        if (cmp < 0) {
+            root.left = remove(root.left, key);
+        } else if (cmp > 0) {
+            root.right = remove(root.right, key);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            }
+
+            if (root.right == null) {
+                return root.left;
+            }
+
+            BSTNode successor = getSuccessor(root);
+            root.key = successor.key;
+            root.right = remove(root.right, successor.key);
+        }
+
+        return root;
+    }
+
+    private BSTNode getSuccessor(BSTNode root) {
+        BSTNode cur = root.right;
+        while (cur != null && cur.left != null) {
+            cur = cur.left;
+        }
+        return cur;
     }
 
     /* Removes the entry for the specified key only if it is currently mapped to

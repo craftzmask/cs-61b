@@ -1,9 +1,11 @@
 package bstmap;
 
-import java.util.Set;
-import java.util.HashSet;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 /** Tests of optional parts of lab 7. */
 public class TestBSTMapExtra {
@@ -13,8 +15,8 @@ public class TestBSTMapExtra {
     */
     @Test
     public void sanityKeySetTest() {
-    	BSTMap<String, Integer> b = new BSTMap<String, Integer>();
-        HashSet<String> values = new HashSet<String>();
+    	BSTMap<String, Integer> b = new BSTMap<>();
+        HashSet<String> values = new HashSet<>();
         for (int i = 0; i < 455; i++) {
             b.put("hi" + i, 1);
             values.add("hi" + i);
@@ -39,7 +41,7 @@ public class TestBSTMapExtra {
      */
     @Test
     public void testRemoveRoot() {
-        BSTMap<String,String> q = new BSTMap<String,String>();
+        BSTMap<String,String> q = new BSTMap<>();
         q.put("c","a");
         q.put("b","a");
         q.put("a","a");
@@ -58,7 +60,7 @@ public class TestBSTMapExtra {
      */
     @Test
     public void testRemoveThreeCases() {
-        BSTMap<String,String> q = new BSTMap<String,String>();
+        BSTMap<String,String> q = new BSTMap<>();
         q.put("c","a");
         q.put("b","a");
         q.put("a","a");

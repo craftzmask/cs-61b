@@ -1,7 +1,9 @@
 package hashmap;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /** Tests of optional parts of lab 8. */
 public class TestMyHashMapExtra {
@@ -22,7 +24,7 @@ public class TestMyHashMapExtra {
         assertTrue(q.containsKey("e"));
     }
 
-    /** 
+    /**
      * Remove Test 2
      * Test the 3 different cases of remove
      */
@@ -48,5 +50,22 @@ public class TestMyHashMapExtra {
         assertTrue(q.containsKey("a"));
         assertTrue(q.containsKey("b"));
         assertTrue(q.containsKey("f"));
+    }
+
+    @Test
+    public void testRemoveKeyAndValue() {
+        MyHashMap<String, String> q = new MyHashMap<>();
+        q.put("c", "a");
+        q.put("b", "a");
+        q.put("a", "a");
+        q.put("d", "a");
+        q.put("e", "a");
+        assertTrue(q.containsKey("a"));
+        assertTrue(q.containsKey("b"));
+        assertTrue(q.containsKey("c"));
+        assertTrue(q.containsKey("d"));
+        assertTrue(q.containsKey("e"));
+        assertTrue(null == q.remove("d", "b"));
+        assertTrue(null != q.remove("d", "a"));
     }
 }

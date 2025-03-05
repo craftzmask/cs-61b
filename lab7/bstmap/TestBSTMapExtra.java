@@ -3,6 +3,7 @@ package bstmap;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -139,4 +140,17 @@ public class TestBSTMapExtra {
         q.printInOrder(); // should print a b c e
     }
 
+    @Test
+    public void testIterator() {
+        BSTMap<String,String> q = new BSTMap<>();
+        q.put("abc", "a");
+        q.put("ccd","a");
+        q.put("baa","a");
+        q.put("aee","a");
+
+        Iterator<String> i = q.iterator();
+        while (i.hasNext()) {
+            System.out.println(i.next());
+        }
+    }
 }

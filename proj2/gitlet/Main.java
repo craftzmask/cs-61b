@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
             Utils.error("Please enter a command.");
+            System.exit(-1);
         }
 
         String firstArg = args[0];
@@ -23,6 +24,7 @@ public class Main {
                 break;
             default:
                 Utils.error("No command with that name exists.");
+                System.exit(-1);
         }
     }
 }

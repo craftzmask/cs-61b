@@ -9,7 +9,10 @@ public class Main {
      *  <COMMAND> <OPERAND1> <OPERAND2> ...
      */
     public static void main(String[] args) {
-        // TODO: what if args is empty?
+        if (args.length == 0) {
+            Utils.error("Please enter a command.");
+        }
+
         String firstArg = args[0];
         switch(firstArg) {
             case "init":
@@ -18,7 +21,8 @@ public class Main {
             case "add":
                 // TODO: handle the `add [filename]` command
                 break;
-            // TODO: FILL THE REST IN
+            default:
+                Utils.error("No command with that name exists.");
         }
     }
 }

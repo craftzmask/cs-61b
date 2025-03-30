@@ -48,8 +48,8 @@ public class Repository {
 
        Commit initialCommit = new Commit();
        String commitHash = initialCommit.saveCommit();
-       Utils.writeContents(HEAD, commitHash);
        Branch.setBranchToCommitHash("master", commitHash);
+       Utils.writeContents(HEAD, "master");
     }
 
     public static void add(String filename) {
@@ -64,7 +64,8 @@ public class Repository {
         Index index = Index.getIndex();
 
         // Get current commit hash
-        String commitHash = Utils.readContentsAsString(HEAD);
+        String branch = Utils.readContentsAsString(HEAD);
+        String commitHash = Branch.getCommitHashFrom(branch);
         Commit commit = Commit.fromHash(commitHash);
         if (commit != null) {
             Tree tree = Tree.getTree(commit.getTreeHash());

@@ -37,7 +37,7 @@ public class Commit implements Serializable {
         timestamp = (new Date(0)).toString();
         parentHash = "";
         secondParentHash = "";
-        treeHash = "";
+        treeHash = (new Tree()).saveTree();
     }
 
     /**

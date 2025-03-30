@@ -1,6 +1,8 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
+
 import static gitlet.Utils.*;
 
 // TODO: any imports you need here
@@ -38,7 +40,7 @@ public class Repository {
     public static final File INDEX = join(GITLET_DIR, "index");
 
     /* TODO: fill in the rest of this class. */
-    public static void init() {
+    public static void init() throws IOException {
        if (!setup()) {
            message("A Gitlet version-control system already exists in the current directory.");
            System.exit(0);
@@ -50,12 +52,46 @@ public class Repository {
        Branch.setBranchToCommitHash("master", commitHash);
     }
 
-    private static boolean setup() {
+    public static void add(String filename) {
+        File f = join(CWD, filename);
+        if (!f.exists()) {
+            message("File does not exist.");
+            System.exit(0);
+        }
+
+        String content = Utils.readContentsAsString(f);
+        String blobHash = Utils.sha1(content);
+        Index index = Index.getIndex();
+
+        // Get current commit hash
+        String commitHash = Utils.readContentsAsString(HEAD);
+        Commit commit = Commit.fromHash(commitHash);
+        if (commit != null) {
+            Tree tree = Tree.getTree(commit.getTreeHash());
+            String treeBlobHash = tree.getBlobHashFrom(filename);
+            if (treeBlobHash.equals(blobHash)) {
+                index.removeEntry(filename);
+                index.saveIndex();
+                return;
+            }
+        }
+
+        File blobFile = join(BLOB_DIR, blobHash);
+        if (!blobFile.exists()) {
+            Utils.writeContents(blobFile, content);
+        }
+
+        index.addEntry(filename, blobHash);
+        index.saveIndex();
+    }
+
+    private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();
             BRANCH_DIR.mkdirs();
             BLOB_DIR.mkdirs();
             TREE_DIR.mkdirs();
+            INDEX.createNewFile();
             return true;
         }
 

@@ -64,9 +64,7 @@ public class Repository {
         Index index = Index.getIndex();
 
         // Get current commit hash
-        String branch = Utils.readContentsAsString(HEAD);
-        String commitHash = Branch.getCommitHashFrom(branch);
-        Commit commit = Commit.fromHash(commitHash);
+        Commit commit = getCurrentCommit();
         if (commit != null) {
             Tree tree = Tree.getTree(commit.getTreeHash());
             String treeBlobHash = tree.getBlobHashFrom(filename);
@@ -97,5 +95,11 @@ public class Repository {
         }
 
         return false;
+    }
+
+    private static Commit getCurrentCommit() {
+        String branch = Utils.readContentsAsString(HEAD);
+        String commitHash = Branch.getCommitHashFrom(branch);
+        return Commit.fromHash(commitHash);
     }
 }

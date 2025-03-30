@@ -24,12 +24,22 @@ public class Repository {
     public static final File CWD = new File(System.getProperty("user.dir"));
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
-    /** the HEAD file */
+    /** The commits directory */
+    public static final File COMMIT_DIR = join(GITLET_DIR, "commits");
+    /** The branches directory */
+    public static final File BRANCH_DIR = join(GITLET_DIR, "branches");
+    /** The blobs directory */
+    public static final File BLOB_DIR = join(GITLET_DIR, "blobs");
+    /** The trees directory */
+    public static final File TREE_DIR = join(GITLET_DIR, "trees");
+    /** The HEAD file */
     public static final File HEAD = join(GITLET_DIR, "HEAD");
+    /** The index file */
+    public static final File INDEX = join(GITLET_DIR, "index");
 
     /* TODO: fill in the rest of this class. */
     public static void init() {
-       if (!GITLET_DIR.mkdirs()) {
+       if (!setup()) {
            message("A Gitlet version-control system already exists in the current directory.");
            System.exit(0);
        }
@@ -38,5 +48,17 @@ public class Repository {
        String commitHash = initialCommit.saveCommit();
        Utils.writeContents(HEAD, commitHash);
        Branch.setBranchToCommitHash("master", commitHash);
+    }
+
+    private static boolean setup() {
+        if (GITLET_DIR.mkdirs()) {
+            COMMIT_DIR.mkdirs();
+            BRANCH_DIR.mkdirs();
+            BLOB_DIR.mkdirs();
+            TREE_DIR.mkdirs();
+            return true;
+        }
+
+        return false;
     }
 }

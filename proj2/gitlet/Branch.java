@@ -5,7 +5,7 @@ import java.io.File;
 public class Branch {
 
     /** Folder that branches live in. */
-    static final File BRANCH_DIR = Utils.join(Repository.GITLET_DIR, "branches");
+    static final File BRANCH_DIR = Repository.BRANCH_DIR;
 
     /**
      *  Set the branch to point to the commit hash
@@ -14,7 +14,6 @@ public class Branch {
      * @param commitHash the commit hash that the branch will point to
      */
     public static void setBranchToCommitHash(String name, String commitHash) {
-        BRANCH_DIR.mkdirs();
         File f = Utils.join(BRANCH_DIR, name);
         Utils.writeContents(f, commitHash);
     }

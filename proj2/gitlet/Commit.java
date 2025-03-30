@@ -15,7 +15,7 @@ import java.util.Date;
 public class Commit implements Serializable {
 
     /** Folder that commits live in. */
-    static final File COMMIT_DIR = Utils.join(Repository.GITLET_DIR, "commits");
+    static final File COMMIT_DIR = Repository.COMMIT_DIR;
 
     /** The message of this Commit. */
     private String message;
@@ -57,7 +57,6 @@ public class Commit implements Serializable {
      * @return Hash of the commit
      */
     public String saveCommit() {
-        COMMIT_DIR.mkdirs();
         String hash = Utils.sha1(message, timestamp, parentHash, secondParentHash, treeHash);
         File f = Utils.join(COMMIT_DIR, hash);
         Utils.writeObject(f, this);

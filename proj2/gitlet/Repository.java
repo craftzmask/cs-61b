@@ -24,6 +24,19 @@ public class Repository {
     public static final File CWD = new File(System.getProperty("user.dir"));
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
+    /** the HEAD file */
+    public static final File HEAD = join(GITLET_DIR, "HEAD");
 
     /* TODO: fill in the rest of this class. */
+    public static void init() {
+       if (!GITLET_DIR.mkdirs()) {
+           message("A Gitlet version-control system already exists in the current directory.");
+           System.exit(0);
+       }
+
+       Commit initialCommit = new Commit();
+       String commitHash = initialCommit.saveCommit();
+       Utils.writeContents(HEAD, commitHash);
+       Branch.setBranchToCommitHash("master", commitHash);
+    }
 }

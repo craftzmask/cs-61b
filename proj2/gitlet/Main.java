@@ -34,6 +34,9 @@ public class Main {
                     Repository.checkout(args[1], args[3]);
                 }
                 break;
+            case "log":
+                Repository.log();
+                break;
             default:
                 Utils.message("No command with that name exists.");
                 System.exit(0);

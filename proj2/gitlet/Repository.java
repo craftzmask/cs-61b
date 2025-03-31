@@ -142,6 +142,28 @@ public class Repository {
         checkout(commitHash, filename);
     }
 
+    public static void log() {
+        String commitHash = Branch.getCommitHashFrom(getCurrentBranch());
+        Commit commit = Commit.fromHash(commitHash);
+        while (commit != null) {
+            System.out.println("===");
+            System.out.println("commit " + commitHash);
+            if (!commit.getSecondParentHash().isEmpty()) {
+                System.out.println("Merge: " + commit.getParentHash().substring(0, 7) + " " + commit.getSecondParentHash().substring(0, 7));
+            }
+            System.out.println("Date: " + commit.getTimestamp());
+            System.out.println(commit.getMessage());
+            System.out.println();
+
+            if (commit.getParentHash().isEmpty()) {
+                return;
+            }
+
+            commitHash = commit.getParentHash();
+            commit = Commit.fromHash(commitHash);
+        }
+    }
+
     private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();

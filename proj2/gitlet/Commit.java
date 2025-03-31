@@ -4,6 +4,8 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /** Represents a gitlet commit object.
@@ -16,6 +18,9 @@ public class Commit implements Serializable {
 
     /** Folder that commits live in. */
     static final File COMMIT_DIR = Repository.COMMIT_DIR;
+
+    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy Z")
+            .withZone(ZoneId.of("America/Los_Angeles"));
 
     /** The message of this Commit. */
     private String message;
@@ -34,7 +39,7 @@ public class Commit implements Serializable {
      */
     public Commit() {
         message = "initial commit";
-        timestamp = (new Date(0)).toString();
+        timestamp = formatter.format((new Date(0)).toInstant());
         parentHash = "";
         secondParentHash = "";
         treeHash = (new Tree()).saveTree();
@@ -68,7 +73,7 @@ public class Commit implements Serializable {
     }
 
     public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp.toString();
+        this.timestamp = formatter.format(timestamp.toInstant());
     }
 
     public void setParentHash(String parentHash) {

@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Index implements Serializable {
 
     /** The index file for staging area */
     public static final File INDEX = Repository.INDEX;
 
-    private Map<String, String> fileToBlobMap = new HashMap<>();
+    private Map<String, String> fileToBlobMap = new TreeMap<>();
 
     public static Index getIndex() {
         if (INDEX.length() == 0) {

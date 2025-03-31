@@ -2,10 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Tree implements Serializable {
     /** Folder that trees live in. */
@@ -14,7 +11,7 @@ public class Tree implements Serializable {
     private Map<String, String> fileToBlobMap;
 
     public Tree() {
-        this.fileToBlobMap = new HashMap<>();
+        this.fileToBlobMap = new TreeMap<>();
     }
 
     public static Tree getTree(String hash) {

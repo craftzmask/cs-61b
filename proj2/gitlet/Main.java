@@ -2,13 +2,16 @@ package gitlet;
 
 import java.io.IOException;
 
-/** Driver class for Gitlet, a subset of the Git version-control system.
- *  @author Khanh Chung
+/**
+ * Driver class for Gitlet, a subset of the Git version-control system.
+ *
+ * @author Khanh Chung
  */
 public class Main {
 
-    /** Usage: java gitlet.Main ARGS, where ARGS contains
-     *  <COMMAND> <OPERAND1> <OPERAND2> ...
+    /**
+     * Usage: java gitlet.Main ARGS, where ARGS contains
+     * <COMMAND> <OPERAND1> <OPERAND2> ...
      */
     public static void main(String[] args) {
         try {
@@ -43,6 +46,9 @@ public class Main {
                     break;
                 case "rm-branch":
                     Repository.deleteBranch(args[1]);
+                    break;
+                case "global-log":
+                    Repository.globalLog();
                     break;
                 default:
                     Utils.message("No command with that name exists.");

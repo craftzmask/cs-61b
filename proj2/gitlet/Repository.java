@@ -3,16 +3,18 @@ package gitlet;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import static gitlet.Utils.*;
 
 // TODO: any imports you need here
 
-/** Represents a gitlet repository.
+/**
+ * Represents a gitlet repository.
  *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
- *  @author Khanh Chung
+ * @author Khanh Chung
  */
 public class Repository {
     /**
@@ -23,34 +25,50 @@ public class Repository {
      * variable is used. We've provided two examples for you.
      */
 
-    /** The current working directory. */
+    /**
+     * The current working directory.
+     */
     public static final File CWD = new File(System.getProperty("user.dir"));
-    /** The .gitlet directory. */
+    /**
+     * The .gitlet directory.
+     */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
-    /** The commits directory */
+    /**
+     * The commits directory
+     */
     public static final File COMMIT_DIR = join(GITLET_DIR, "commits");
-    /** The branches directory */
+    /**
+     * The branches directory
+     */
     public static final File BRANCH_DIR = join(GITLET_DIR, "branches");
-    /** The blobs directory */
+    /**
+     * The blobs directory
+     */
     public static final File BLOB_DIR = join(GITLET_DIR, "blobs");
-    /** The trees directory */
+    /**
+     * The trees directory
+     */
     public static final File TREE_DIR = join(GITLET_DIR, "trees");
-    /** The HEAD file */
+    /**
+     * The HEAD file
+     */
     public static final File HEAD = join(GITLET_DIR, "HEAD");
-    /** The index file */
+    /**
+     * The index file
+     */
     public static final File INDEX = join(GITLET_DIR, "index");
 
     /* TODO: fill in the rest of this class. */
     public static void init() throws IOException {
-       if (!setup()) {
-           message("A Gitlet version-control system already exists in the current directory.");
-           System.exit(0);
-       }
+        if (!setup()) {
+            message("A Gitlet version-control system already exists in the current directory.");
+            System.exit(0);
+        }
 
-       Commit initialCommit = new Commit();
-       String commitHash = initialCommit.saveCommit();
-       Branch.setBranchToCommitHash("master", commitHash);
-       Utils.writeContents(HEAD, "master");
+        Commit initialCommit = new Commit();
+        String commitHash = initialCommit.saveCommit();
+        Branch.setBranchToCommitHash("master", commitHash);
+        Utils.writeContents(HEAD, "master");
     }
 
     public static void add(String filename) {
@@ -146,19 +164,10 @@ public class Repository {
         String commitHash = Branch.getCommitHashFrom(getCurrentBranch());
         Commit commit = Commit.fromHash(commitHash);
         while (commit != null) {
-            System.out.println("===");
-            System.out.println("commit " + commitHash);
-            if (!commit.getSecondParentHash().isEmpty()) {
-                System.out.println("Merge: " + commit.getParentHash().substring(0, 7) + " " + commit.getSecondParentHash().substring(0, 7));
-            }
-            System.out.println("Date: " + commit.getTimestamp());
-            System.out.println(commit.getMessage());
-            System.out.println();
-
+            commit.printCommit(commitHash);
             if (commit.getParentHash().isEmpty()) {
                 return;
             }
-
             commitHash = commit.getParentHash();
             commit = Commit.fromHash(commitHash);
         }
@@ -187,6 +196,13 @@ public class Repository {
         }
 
         branchFile.delete();
+    }
+
+    public static void globalLog() {
+        List<String> commitHashList = plainFilenamesIn(COMMIT_DIR);
+        for (String commitHash : commitHashList) {
+            Commit.fromHash(commitHash).printCommit(commitHash);
+        }
     }
 
     private static boolean setup() throws IOException {

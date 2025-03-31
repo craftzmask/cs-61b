@@ -107,4 +107,15 @@ public class Commit implements Serializable {
     public String getTreeHash() {
         return treeHash;
     }
+
+    public void printCommit(String hash) {
+        System.out.println("===");
+        System.out.println("commit " + hash);
+        if (!secondParentHash.isEmpty()) {
+            System.out.println("Merge: " + parentHash.substring(0, 7) + " " + secondParentHash.substring(0, 7));
+        }
+        System.out.println("Date: " + timestamp);
+        System.out.println(message);
+        System.out.println();
+    }
 }

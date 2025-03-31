@@ -11,7 +11,11 @@ public class Tree implements Serializable {
     /** Folder that trees live in. */
     static final File TREE_DIR = Repository.TREE_DIR;
 
-    private Map<String, String> fileToBlobMap = new HashMap<>();
+    private Map<String, String> fileToBlobMap;
+
+    public Tree() {
+        this.fileToBlobMap = new HashMap<>();
+    }
 
     public static Tree getTree(String hash) {
         File f = Utils.join(TREE_DIR, hash);
@@ -23,6 +27,10 @@ public class Tree implements Serializable {
         File f = Utils.join(TREE_DIR, hash);
         Utils.writeObject(f, this);
         return hash;
+    }
+
+    public void merge(Map<String, String> other) {
+        fileToBlobMap.putAll(other);
     }
 
     public String getBlobHashFrom(String filename) {

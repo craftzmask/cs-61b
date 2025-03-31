@@ -33,7 +33,15 @@ public class Index implements Serializable {
         }
     }
 
+    public boolean isEmpty() {
+        return fileToBlobMap.isEmpty();
+    }
+
+    public Map<String, String> getFileToBlobMap() {
+        return fileToBlobMap;
+    }
+
     public void clear() {
-        Utils.writeObject(INDEX, "");
+        Utils.writeObject(INDEX, new Index());
     }
 }

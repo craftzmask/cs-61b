@@ -24,6 +24,16 @@ public class Main {
             case "add":
                 Repository.add(args[1]);
                 break;
+            case "commit":
+                Repository.commit(args[1]);
+                break;
+            case "checkout":
+                if (args.length == 3) {
+                    Repository.checkout(args[2]);
+                } else {
+                    Repository.checkout(args[1], args[3]);
+                }
+                break;
             default:
                 Utils.message("No command with that name exists.");
                 System.exit(0);

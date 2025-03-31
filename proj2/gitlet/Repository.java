@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import static gitlet.Utils.*;
 
@@ -84,6 +85,63 @@ public class Repository {
         index.saveIndex();
     }
 
+    public static void commit(String message) {
+        if (message == null || message.isEmpty()) {
+            message("Please enter a commit message.");
+            System.exit(0);
+        }
+
+        Index index = Index.getIndex();
+        if (index.isEmpty()) {
+            message("No changes added to the commit.");
+            System.exit(0);
+        }
+
+        Commit commit = getCurrentCommit();
+
+        // Update tree
+        Tree commitTree = Tree.getTree(commit.getTreeHash());
+        commitTree.merge(index.getFileToBlobMap());
+        String treeHash = commitTree.saveTree();
+
+        // Update commit
+        commit.setMessage(message);
+        commit.setTimestamp(new Date());
+        commit.setParentHash(Branch.getCommitHashFrom(getCurrentBranch()));
+        commit.setTreeHash(treeHash);
+        String commitHash = commit.saveCommit();
+
+        Branch.setBranchToCommitHash(getCurrentBranch(), commitHash);
+        index.clear();
+    }
+
+    public static void checkout(String commitHash, String filename) {
+        File commitFile = join(COMMIT_DIR, commitHash);
+        if (!commitFile.exists()) {
+            message("No commit with that id exists.");
+            System.exit(0);
+        }
+
+        Commit commit = Commit.fromHash(commitHash);
+        Tree commitTree = Tree.getTree(commit.getTreeHash());
+        String blobHash = commitTree.getBlobHashFrom(filename);
+
+        File blobFile = join(BLOB_DIR, blobHash);
+        if (!blobFile.exists()) {
+            message("File does not exist in that commit.");
+            System.exit(0);
+        }
+
+        String content = Utils.readContentsAsString(blobFile);
+        Utils.writeContents(join(CWD, filename), content);
+    }
+
+    public static void checkout(String filename) {
+        String branch = Utils.readContentsAsString(HEAD);
+        String commitHash = Branch.getCommitHashFrom(branch);
+        checkout(commitHash, filename);
+    }
+
     private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();
@@ -101,5 +159,9 @@ public class Repository {
         String branch = Utils.readContentsAsString(HEAD);
         String commitHash = Branch.getCommitHashFrom(branch);
         return Commit.fromHash(commitHash);
+    }
+
+    private static String getCurrentBranch() {
+        return Utils.readContentsAsString(HEAD);
     }
 }

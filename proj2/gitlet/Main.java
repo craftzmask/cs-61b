@@ -38,6 +38,12 @@ public class Main {
                 case "log":
                     Repository.log();
                     break;
+                case "branch":
+                    Repository.branch(args[1]);
+                    break;
+                case "rm-branch":
+                    Repository.deleteBranch(args[1]);
+                    break;
                 default:
                     Utils.message("No command with that name exists.");
                     System.exit(0);

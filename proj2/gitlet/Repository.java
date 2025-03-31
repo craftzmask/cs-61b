@@ -164,6 +164,16 @@ public class Repository {
         }
     }
 
+    public static void branch(String name) {
+        File branchFile = join(BRANCH_DIR, name);
+        if (branchFile.exists()) {
+            message("A branch with that name already exists.");
+            System.exit(0);
+        }
+
+        Utils.writeContents(branchFile, getCurrentCommitHash());
+    }
+
     public static void deleteBranch(String name) {
         File branchFile = join(BRANCH_DIR, name);
         if (!branchFile.exists()) {
@@ -193,9 +203,12 @@ public class Repository {
     }
 
     private static Commit getCurrentCommit() {
+        return Commit.fromHash(getCurrentCommitHash());
+    }
+
+    private static String getCurrentCommitHash() {
         String branch = Utils.readContentsAsString(HEAD);
-        String commitHash = Branch.getCommitHashFrom(branch);
-        return Commit.fromHash(commitHash);
+        return Branch.getCommitHashFrom(branch);
     }
 
     private static String getCurrentBranch() {

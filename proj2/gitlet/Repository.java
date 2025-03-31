@@ -164,6 +164,21 @@ public class Repository {
         }
     }
 
+    public static void deleteBranch(String name) {
+        File branchFile = join(BRANCH_DIR, name);
+        if (!branchFile.exists()) {
+            message("A branch with that name does not exist.");
+            System.exit(0);
+        }
+
+        if (getCurrentBranch().equals(name)) {
+            message("Cannot remove the current branch.");
+            System.exit(0);
+        }
+
+        branchFile.delete();
+    }
+
     private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();

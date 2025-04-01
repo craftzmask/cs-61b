@@ -34,8 +34,10 @@ public class Main {
                 case "checkout":
                     if (args.length == 3) {
                         Repository.checkout(args[2]);
-                    } else {
+                    } else if (args.length == 4) {
                         Repository.checkout(args[1], args[3]);
+                    } else {
+                        Repository.checkoutFromBranch(args[1]);
                     }
                     break;
                 case "log":

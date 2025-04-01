@@ -34,6 +34,14 @@ public class Tree implements Serializable {
         return fileToBlobMap.getOrDefault(filename, "");
     }
 
+    public Map<String, String> getFileToBlobMap() {
+        return fileToBlobMap;
+    }
+
+    public boolean containsFile(String filename) {
+        return fileToBlobMap.containsKey(filename);
+    }
+
     private List<Object> data() {
         List<Object> data = new ArrayList<>();
         for (String key : fileToBlobMap.keySet()) {

@@ -160,6 +160,54 @@ public class Repository {
         checkout(commitHash, filename);
     }
 
+    public static void checkoutFromBranch(String branchName) {
+        File branchFile = join(BRANCH_DIR, branchName);
+        if (!branchFile.exists()) {
+            message("No such branch exists.");
+            System.exit(0);
+        }
+
+        if (getCurrentBranch().equals(branchName)) {
+            message("No need to checkout the current branch.");
+            System.exit(0);
+        }
+
+        // Get current commit
+        Commit currentCommit = getCurrentCommit();
+        Tree currentTree = Tree.getTree(currentCommit.getTreeHash());
+
+        // Get commit from the given branch
+        String commitHash = Branch.getCommitHashFrom(branchName);
+        Commit commit = Commit.fromHash(commitHash);
+        Tree tree = Tree.getTree(commit.getTreeHash());
+
+        // Check if any file from current working dir not included in the current commit
+        List<String> workingFiles = plainFilenamesIn(CWD);
+        for (String file : workingFiles) {
+            boolean isUntracked = !currentTree.containsFile(file);
+            boolean willBeOverwritten = tree.containsFile(file);
+            if (isUntracked && willBeOverwritten) {
+                message("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.exit(0);
+            }
+        }
+
+        // Delete all files from the current working dir
+        for (String file : workingFiles) {
+            join(CWD, file).delete();
+        }
+
+        // Copy everything from the given commit to the current working dir
+        for (var entry : tree.getFileToBlobMap().entrySet()) {
+            File blobFile = join(BLOB_DIR, entry.getValue());
+            writeContents(join(CWD, entry.getKey()), Utils.readContentsAsString(blobFile));
+        }
+
+        Index.getIndex().clear();
+        Index.getIndex().saveIndex();
+        Utils.writeContents(join(GITLET_DIR, "HEAD"), branchName);
+    }
+
     public static void log() {
         String commitHash = Branch.getCommitHashFrom(getCurrentBranch());
         Commit commit = Commit.fromHash(commitHash);

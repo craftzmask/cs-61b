@@ -205,6 +205,23 @@ public class Repository {
         }
     }
 
+    public static void find(String commitMessage) {
+        boolean found = false;
+        List<String> commitHashList = plainFilenamesIn(COMMIT_DIR);
+        for (String commitHash : commitHashList) {
+            Commit commit = Commit.fromHash(commitHash);
+            if (commit.getMessage().equals(commitMessage)) {
+                System.out.println(commitHash);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            message("Found no commit with that message.");
+            System.exit(0);
+        }
+    }
+
     private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();

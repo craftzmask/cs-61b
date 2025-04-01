@@ -131,12 +131,6 @@ public class Repository {
     }
 
     public static void checkout(String commitHash, String filename) {
-        File commitFile = join(COMMIT_DIR, commitHash);
-        if (!commitFile.exists()) {
-            message("No commit with that id exists.");
-            System.exit(0);
-        }
-
         Commit commit = Commit.fromHash(commitHash);
         Tree commitTree = Tree.getTree(commit.getTreeHash());
         String blobHash = commitTree.getBlobHashFrom(filename);

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 /** Represents a gitlet commit object.
  *  does at a high level.
@@ -19,6 +20,7 @@ public class Commit implements Serializable {
     static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("EEE MMM dd HH:mm:ss yyyy Z")
             .withZone(ZoneId.of("America/Los_Angeles"));
+    static final int HASH_LENGTH = 40;
 
     /** The message of this Commit. */
     private String message;
@@ -49,6 +51,15 @@ public class Commit implements Serializable {
      * @return Commit read from file
      */
     public static Commit fromHash(String hash) {
+        if (hash.length() < HASH_LENGTH) {
+            List<String> files = Utils.plainFilenamesIn(COMMIT_DIR);
+            for (String file : files) {
+                if (file.contains(hash)) {
+                    return Utils.readObject(Utils.join(COMMIT_DIR, file), Commit.class);
+                }
+            }
+        }
+
         File f = Utils.join(COMMIT_DIR, hash);
         if (!f.exists()) {
             Utils.message("No commit with that id exists.");

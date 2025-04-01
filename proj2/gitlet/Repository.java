@@ -270,6 +270,10 @@ public class Repository {
         }
     }
 
+    public static boolean isInitialized() {
+        return GITLET_DIR.exists();
+    }
+
     private static boolean setup() throws IOException {
         if (GITLET_DIR.mkdirs()) {
             COMMIT_DIR.mkdirs();

@@ -16,7 +16,8 @@ public class Commit implements Serializable {
     /** Folder that commits live in. */
     static final File COMMIT_DIR = Repository.COMMIT_DIR;
 
-    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy Z")
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter
+            .ofPattern("EEE MMM dd HH:mm:ss yyyy Z")
             .withZone(ZoneId.of("America/Los_Angeles"));
 
     /** The message of this Commit. */
@@ -35,7 +36,7 @@ public class Commit implements Serializable {
      */
     public Commit() {
         message = "initial commit";
-        timestamp = formatter.format((new Date(0)).toInstant());
+        timestamp = FORMATTER.format((new Date(0)).toInstant());
         parentHash = "";
         secondParentHash = "";
         treeHash = (new Tree()).saveTree();
@@ -74,7 +75,7 @@ public class Commit implements Serializable {
     }
 
     public void setTimestamp(Date timestamp) {
-        this.timestamp = formatter.format(timestamp.toInstant());
+        this.timestamp = FORMATTER.format(timestamp.toInstant());
     }
 
     public void setParentHash(String parentHash) {
@@ -113,7 +114,9 @@ public class Commit implements Serializable {
         System.out.println("===");
         System.out.println("commit " + hash);
         if (!secondParentHash.isEmpty()) {
-            System.out.println("Merge: " + parentHash.substring(0, 7) + " " + secondParentHash.substring(0, 7));
+            System.out.println("Merge: "
+                    + parentHash.substring(0, 7) + " "
+                    + secondParentHash.substring(0, 7));
         }
         System.out.println("Date: " + timestamp);
         System.out.println(message);

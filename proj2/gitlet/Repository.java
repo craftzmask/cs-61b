@@ -171,7 +171,9 @@ public class Repository {
 
         // Get commit from the given branch
         String commitHash = Branch.getCommitHashFrom(branchName);
-        reset(commitHash);
+        updateCurrentWorkingDirFromCommitHash(commitHash);
+
+        Utils.writeContents(join(GITLET_DIR, "HEAD"), branchName);
     }
 
     public static void log() {
@@ -280,38 +282,7 @@ public class Repository {
     }
 
     public static void reset(String commitHash) {
-        // Get current commit
-        Commit currentCommit = getCurrentCommit();
-        Tree currentTree = Tree.getTree(currentCommit.getTreeHash());
-
-        Commit commit = Commit.fromHash(commitHash);
-        Tree tree = Tree.getTree(commit.getTreeHash());
-
-        // Check if any file from current working dir not included in the current commit
-        List<String> workingFiles = plainFilenamesIn(CWD);
-        for (String file : workingFiles) {
-            boolean isUntracked = !currentTree.containsFile(file);
-            boolean willBeOverwritten = tree.containsFile(file);
-            if (isUntracked && willBeOverwritten) {
-                message("There is an untracked file in the way; delete it, or add and commit it first.");
-                System.exit(0);
-            }
-        }
-
-        // Delete all files from the current working dir
-        for (String file : workingFiles) {
-            restrictedDelete(join(CWD, file));
-        }
-
-        // Copy everything from the given commit to the current working dir
-        for (var entry : tree.getFileToBlobMap().entrySet()) {
-            File blobFile = join(BLOB_DIR, entry.getValue());
-            writeContents(join(CWD, entry.getKey()), Utils.readContentsAsString(blobFile));
-        }
-
-        // Reset staging area
-        Index.getIndex().clear();
-        Index.getIndex().saveIndex();
+        updateCurrentWorkingDirFromCommitHash(commitHash);
 
         // Set current branch point to the given commit hash
         Utils.writeContents(join(BRANCH_DIR, getCurrentBranch()), commitHash);
@@ -354,5 +325,41 @@ public class Repository {
             System.out.println(s);
         }
         System.out.println();
+    }
+
+    private static void updateCurrentWorkingDirFromCommitHash(String commitHash) {
+        // Get current commit
+        Commit currentCommit = getCurrentCommit();
+        Tree currentTree = Tree.getTree(currentCommit.getTreeHash());
+
+        Commit commit = Commit.fromHash(commitHash);
+        Tree tree = Tree.getTree(commit.getTreeHash());
+
+        // Check if any file from current working dir not included in the current commit
+        List<String> workingFiles = plainFilenamesIn(CWD);
+        for (String file : workingFiles) {
+            boolean isUntracked = !currentTree.containsFile(file);
+            boolean willBeOverwritten = tree.containsFile(file);
+            if (isUntracked && willBeOverwritten) {
+                System.out.print("There is an untracked file in the way; ");
+                System.out.println("delete it, or add and commit it first.");
+                System.exit(0);
+            }
+        }
+
+        // Delete all files from the current working dir
+        for (String file : workingFiles) {
+            restrictedDelete(join(CWD, file));
+        }
+
+        // Copy everything from the given commit to the current working dir
+        for (var entry : tree.getFileToBlobMap().entrySet()) {
+            File blobFile = join(BLOB_DIR, entry.getValue());
+            writeContents(join(CWD, entry.getKey()), Utils.readContentsAsString(blobFile));
+        }
+
+        // Reset staging area
+        Index.getIndex().clear();
+        Index.getIndex().saveIndex();
     }
 }

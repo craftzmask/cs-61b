@@ -32,7 +32,12 @@ public class Tree implements Serializable {
     }
 
     public String getBlobHashFrom(String filename) {
-        return fileToBlobMap.getOrDefault(filename, "");
+        String blobHash = fileToBlobMap.getOrDefault(filename, "");
+        if (blobHash.isEmpty()) {
+            Utils.message("File does not exist in that commit.");
+            System.exit(0);
+        }
+        return blobHash;
     }
 
     public Map<String, String> getFileToBlobMap() {

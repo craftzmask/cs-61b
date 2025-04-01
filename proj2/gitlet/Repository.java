@@ -9,18 +9,14 @@ import java.util.List;
 
 import static gitlet.Utils.*;
 
-// TODO: any imports you need here
-
 /**
  * Represents a gitlet repository.
- *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
  * @author Khanh Chung
  */
 public class Repository {
     /**
-     * TODO: add instance variables here.
      *
      * List all instance variables of the Repository class here with a useful
      * comment above them describing what that variable represents and how that
@@ -60,7 +56,6 @@ public class Repository {
      */
     public static final File INDEX = join(GITLET_DIR, "index");
 
-    /* TODO: fill in the rest of this class. */
     public static void init() throws IOException {
         if (!setup()) {
             message("A Gitlet version-control system already exists in the current directory.");
@@ -196,7 +191,7 @@ public class Repository {
 
         // Delete all files from the current working dir
         for (String file : workingFiles) {
-            join(CWD, file).delete();
+            restrictedDelete(join(CWD, file));
         }
 
         // Copy everything from the given commit to the current working dir
@@ -245,7 +240,7 @@ public class Repository {
             System.exit(0);
         }
 
-        branchFile.delete();
+        restrictedDelete(branchFile);
     }
 
     public static void globalLog() {
@@ -286,7 +281,7 @@ public class Repository {
             index.addEntry(filename, ""); // empty blob means will be stage for removal
             File f = join(CWD, filename);
             if (f.exists()) {
-                f.delete();
+                restrictedDelete(f);
             }
             index.saveIndex();
             System.exit(0);
@@ -313,6 +308,30 @@ public class Repository {
         printList("Removed Files", Index.getIndex().getRemovedFiles());
         printList("Modifications Not Staged For Commit", new ArrayList<>());
         printList("Untracked Files", new ArrayList<>());
+    }
+
+    public static void reset(String commitHash) {
+        Commit commit = Commit.fromHash(commitHash);
+        Tree tree = Tree.getTree(commit.getTreeHash());
+
+        // Delete all files from the current working dir
+        List<String> workingFiles = plainFilenamesIn(CWD);
+        for (String file : workingFiles) {
+            restrictedDelete(join(CWD, file));
+        }
+
+        // Copy everything from the given commit to the current working dir
+        for (var entry : tree.getFileToBlobMap().entrySet()) {
+            File blobFile = join(BLOB_DIR, entry.getValue());
+            writeContents(join(CWD, entry.getKey()), Utils.readContentsAsString(blobFile));
+        }
+
+        // Reset staging area
+        Index.getIndex().clear();
+        Index.getIndex().saveIndex();
+
+        // Set current branch point to the given commit hash
+        Utils.writeContents(join(BRANCH_DIR, getCurrentBranch()), commitHash);
     }
 
     public static boolean isInitialized() {

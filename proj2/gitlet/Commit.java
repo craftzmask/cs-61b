@@ -1,7 +1,5 @@
 package gitlet;
 
-// TODO: any imports you need here
-
 import java.io.File;
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -9,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /** Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
  *  @author Khanh Chung
@@ -33,7 +30,6 @@ public class Commit implements Serializable {
     /** The tree hash */
     private String treeHash;
 
-    /* TODO: fill in the rest of this class. */
     /**
      * Creates an initial commit.
      */
@@ -53,6 +49,11 @@ public class Commit implements Serializable {
      */
     public static Commit fromHash(String hash) {
         File f = Utils.join(COMMIT_DIR, hash);
+        if (!f.exists()) {
+            Utils.message("No commit with that id exists.");
+            System.exit(0);
+        }
+
         return Utils.readObject(f, Commit.class);
     }
 

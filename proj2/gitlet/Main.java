@@ -73,6 +73,10 @@ public class Main {
                     validateNumArgs(args, 1, "Incorrect operands.");
                     Repository.status();
                     break;
+                case "reset":
+                    validateNumArgs(args, 2, "Incorrect operands.");
+                    Repository.reset(args[1]);
+                    break;
                 default:
                     Utils.message("No command with that name exists.");
                     System.exit(0);
@@ -91,11 +95,13 @@ public class Main {
      */
     public static void validateNumArgs(String[] args, int n, String errorMessage) {
         if (!args[0].equals("init") && !Repository.isInitialized()) {
-            Utils.error("Not in an initialized Gitlet directory.");
+            Utils.message("Not in an initialized Gitlet directory.");
+            System.exit(0);
         }
 
         if (args.length != n) {
-            Utils.error(errorMessage);
+            Utils.message(errorMessage);
+            System.exit(0);
         }
     }
 }

@@ -37,9 +37,17 @@ public class Main {
                 case "checkout":
                     if (args.length == 2) {
                         Repository.checkoutFromBranch(args[1]);
-                    } else if (args.length == 3 && args[1].equals("--")) {
+                    } else if (args.length == 3) {
+                        if (!args[1].equals("--")) {
+                            Utils.message("Incorrect operands.");
+                            System.exit(0);
+                        }
                         Repository.checkout(args[2]);
-                    } else if (args.length == 4 && args[2].equals("--")) {
+                    } else if (args.length == 4 ) {
+                        if (!args[2].equals("--")) {
+                            Utils.message("Incorrect operands.");
+                            System.exit(0);
+                        }
                         Repository.checkout(args[1], args[3]);
                     } else {
                         Utils.error("Incorrect operands.");

@@ -1,7 +1,5 @@
 package gitlet;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -243,7 +241,7 @@ public class Repository {
             System.exit(0);
         }
 
-        restrictedDelete(branchFile);
+        branchFile.delete();
     }
 
     public static void globalLog() {
@@ -314,11 +312,26 @@ public class Repository {
     }
 
     public static void reset(String commitHash) {
+        // Get current commit
+        Commit currentCommit = getCurrentCommit();
+        Tree currentTree = Tree.getTree(currentCommit.getTreeHash());
+
         Commit commit = Commit.fromHash(commitHash);
         Tree tree = Tree.getTree(commit.getTreeHash());
 
-        // Delete all files from the current working dir
+        // Check if any file from current working dir not included in the current commit
         List<String> workingFiles = plainFilenamesIn(CWD);
+        for (String file : workingFiles) {
+            boolean isUntracked = !currentTree.containsFile(file);
+            boolean willBeOverwritten = tree.containsFile(file);
+            if (isUntracked && willBeOverwritten) {
+                System.out.print("There is an untracked file in the way; ");
+                System.out.println("delete it, or add and commit it first.");
+                System.exit(0);
+            }
+        }
+
+        // Delete all files from the current working dir
         for (String file : workingFiles) {
             restrictedDelete(join(CWD, file));
         }

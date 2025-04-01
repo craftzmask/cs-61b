@@ -2,7 +2,6 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,6 +39,10 @@ public class Index implements Serializable {
 
     public Map<String, String> getFileToBlobMap() {
         return fileToBlobMap;
+    }
+
+    public boolean containsFile(String filename) {
+        return fileToBlobMap.containsKey(filename);
     }
 
     public void clear() {

@@ -270,6 +270,30 @@ public class Repository {
         }
     }
 
+    public static void rm(String filename) {
+        Index index = Index.getIndex();
+        if (index.containsFile(filename)) {
+            index.removeEntry(filename);
+            index.saveIndex();
+            System.exit(0);
+        }
+
+        Commit commit = getCurrentCommit();
+        Tree tree = Tree.getTree(commit.getTreeHash());
+        if (tree.containsFile(filename)) {
+            index.addEntry(filename, ""); // empty blob means will be stage for removal
+            File f = join(CWD, filename);
+            if (f.exists()) {
+                f.delete();
+            }
+            index.saveIndex();
+            System.exit(0);
+        }
+
+        Utils.message("No reason to remove the file.");
+        System.exit(0);
+    }
+
     public static boolean isInitialized() {
         return GITLET_DIR.exists();
     }

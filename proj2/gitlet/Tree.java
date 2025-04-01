@@ -28,6 +28,7 @@ public class Tree implements Serializable {
 
     public void merge(Map<String, String> other) {
         fileToBlobMap.putAll(other);
+        fileToBlobMap.entrySet().removeIf(entry -> entry.getValue().isEmpty());
     }
 
     public String getBlobHashFrom(String filename) {

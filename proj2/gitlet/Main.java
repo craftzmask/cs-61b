@@ -83,7 +83,7 @@ public class Main {
         if (!args[0].equals("init") && !Repository.isInitialized()) {
             Utils.error("Not in an initialized Gitlet directory.");
         }
-        
+
         if (args.length != n) {
             Utils.error(errorMessage);
         }

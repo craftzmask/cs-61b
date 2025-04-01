@@ -35,12 +35,14 @@ public class Main {
                     Repository.commit(args[1]);
                     break;
                 case "checkout":
-                    if (args.length == 3) {
+                    if (args.length == 2) {
+                        Repository.checkoutFromBranch(args[1]);
+                    } else if (args.length == 3 && args[1].equals("--")) {
                         Repository.checkout(args[2]);
-                    } else if (args.length == 4) {
+                    } else if (args.length == 4 && args[2].equals("--")) {
                         Repository.checkout(args[1], args[3]);
                     } else {
-                        Repository.checkoutFromBranch(args[1]);
+                        Utils.error("Incorrect operands.");
                     }
                     break;
                 case "log":
@@ -62,6 +64,14 @@ public class Main {
                 case "find":
                     validateNumArgs(args, 2, "Incorrect operands.");
                     Repository.find(args[1]);
+                    break;
+                case "rm":
+                    validateNumArgs(args, 2, "Incorrect operands.");
+                    Repository.rm(args[1]);
+                    break;
+                case "status":
+                    validateNumArgs(args, 1, "Incorrect operands.");
+                    Repository.status();
                     break;
                 default:
                     Utils.message("No command with that name exists.");

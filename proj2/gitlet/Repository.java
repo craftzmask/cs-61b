@@ -2,6 +2,8 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -294,6 +296,25 @@ public class Repository {
         System.exit(0);
     }
 
+    public static void status() {
+        List<String> branches = plainFilenamesIn(BRANCH_DIR);
+        Collections.sort(branches);
+        System.out.println("=== Branches ===");
+        for (var s : branches) {
+            String currentBranch = getCurrentBranch();
+            if (currentBranch.equals(s)) {
+                System.out.print("*");
+            }
+            System.out.println(s);
+        }
+        System.out.println();
+
+        printList("Staged Files", Index.getIndex().getStagedFiles());
+        printList("Removed Files", Index.getIndex().getRemovedFiles());
+        printList("Modifications Not Staged For Commit", new ArrayList<>());
+        printList("Untracked Files", new ArrayList<>());
+    }
+
     public static boolean isInitialized() {
         return GITLET_DIR.exists();
     }
@@ -322,5 +343,14 @@ public class Repository {
 
     private static String getCurrentBranch() {
         return Utils.readContentsAsString(HEAD);
+    }
+
+    private static void printList(String title, List<String> list) {
+        Collections.sort(list);
+        System.out.println("=== " + title + " ===");
+        for (var s : list) {
+            System.out.println(s);
+        }
+        System.out.println();
     }
 }

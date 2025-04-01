@@ -2,6 +2,8 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -44,6 +46,27 @@ public class Index implements Serializable {
     public boolean containsFile(String filename) {
         return fileToBlobMap.containsKey(filename);
     }
+
+    public List<String> getStagedFiles() {
+        List<String> files = new ArrayList<>();
+        for (String file : fileToBlobMap.keySet()) {
+            if (!fileToBlobMap.get(file).isEmpty()) {
+                files.add(file);
+            }
+        }
+        return files;
+    }
+
+    public List<String> getRemovedFiles() {
+        List<String> files = new ArrayList<>();
+        for (String file : fileToBlobMap.keySet()) {
+            if (fileToBlobMap.get(file).isEmpty()) {
+                files.add(file);
+            }
+        }
+        return files;
+    }
+
 
     public void clear() {
         Utils.writeObject(INDEX, new Index());
